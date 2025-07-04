@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Urbin - Analyse Poubelle</title>
+</head>
+<body>
+    <h1>Uploader une image de poubelle</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit">Analyser</button>
+    </form>
+
+    {% if uploaded_file_url %}
+        <h2>Résultat :</h2>
+        <img src="{{ uploaded_file_url }}" width="300">
+        <p><strong>État :</strong> {{ result.classification }}</p>
+        <p><strong>Confiance :</strong> {{ result.confidence }}</p>
+        <p><strong>Score :</strong> {{ result.score }}</p>
+        <p><strong>Détails :</strong> {{ result.details }}</p>
+    {% elif result.error %}
+        <p style="color: red;">Erreur : {{ result.error }}</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Environnements virtuels
+env/
+venv/
+
+# Fichiers de cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Base de données locale
+db.sqlite3
+
+# Fichiers de config secrets
+*.env
+
+# Dossiers de médias uploadés
+/media
+/uploads
+
+# Fichiers systèmes
+.DS_Store
+
+# Logs
+*.log

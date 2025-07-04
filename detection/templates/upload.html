@@ -1,0 +1,14 @@
+<!-- detection/templates/upload.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Upload Image</title></head>
+<body>
+  <h2>Uploader une image</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Analyser</button>
+  </form>
+  <p><a href="{% url 'logout' %}">Se déconnecter</a></p>
+</body>
+</html>
