@@ -129,3 +129,33 @@ def login_user(request):
         })
     else:
         return Response({'error': 'Identifiants invalides.'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+
+@api_view(['GET'])
+def bins_data(request):
+    bins = ImageUpload.objects.all()
+
+    stats = {
+        "total": bins.count(),
+        "pleine": bins.filter(annotation="pleine").count(),
+        "vide": bins.filter(annotation="vide").count(),
+        "inconnu": bins.filter(annotation="auto").count(),
+    }
+
+    bins_list = []
+    for b in bins:
+        bins_list.append({
+            "id": b.id,
+            "chemin": b.chemin,
+            "type": b.type,
+            "date": b.date_csv,
+            "taille": b.taille,
+            "hauteur": b.hauteur,
+            "largeur": b.largeur,
+            "pixels": b.pixels,
+            "latitude": b.latitude,
+            "longitude": b.longitude,
+            "classe": b.annotation,
+        })
+
+    return Response({"stats": stats, "bins": bins_list})

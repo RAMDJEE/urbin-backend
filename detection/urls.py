@@ -12,4 +12,5 @@ urlpatterns = [
     path('api/hello/', hello_world),
     path('api/register/', register_user),
     path('api/login/', login_user),
+    path("api/bins/", views.bins_data, name="bins_data"),
 ]

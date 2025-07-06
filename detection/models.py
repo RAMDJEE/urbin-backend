@@ -5,23 +5,26 @@ class ImageUpload(models.Model):
     uploader = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="uploads/")
     upload_date = models.DateTimeField(auto_now_add=True)
+
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
-    annotation = models.CharField(max_length=10, choices=[("pleine", "Pleine"), ("vide", "Vide"), ("auto", "Auto"), ("non", "Non annotée")], default="non")
-    # Features extraites
-    file_size_kb = models.FloatField(null=True, blank=True)
-    width = models.IntegerField(null=True, blank=True)
-    height = models.IntegerField(null=True, blank=True)
-    avg_r = models.FloatField(null=True, blank=True)
-    avg_g = models.FloatField(null=True, blank=True)
-    avg_b = models.FloatField(null=True, blank=True)
-    contrast = models.FloatField(null=True, blank=True)
-    contours = models.IntegerField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.image.name} - {self.annotation}"
-    
-
+    annotation = models.CharField(
+        max_length=10,
+        choices=[
+            ("pleine", "Pleine"),
+            ("vide", "Vide"),
+            ("auto", "Auto"),
+            ("non", "Non annotée")
+        ],
+        default="non"
+    )
+    chemin = models.TextField(null=True, blank=True)
+    type = models.CharField(max_length=50, null=True, blank=True)
+    date_csv = models.CharField(max_length=50, null=True, blank=True)
+    taille = models.CharField(max_length=50, null=True, blank=True)
+    hauteur = models.CharField(max_length=50, null=True, blank=True)
+    largeur = models.CharField(max_length=50, null=True, blank=True)
+    pixels = models.CharField(max_length=50, null=True, blank=True)
 
 from django.db import models
 from django.contrib.auth.models import User
