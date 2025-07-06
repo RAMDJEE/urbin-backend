@@ -1,1 +1,1 @@
-web: gunicorn urbin.wsgi
+web: PYTHONPATH=. gunicorn urbin.wsgi --log-file -
