@@ -11,7 +11,8 @@ CSV_PATH = "Data/csv/df_fichiers_img.csv"
 
 uploader = User.objects.first()
 if not uploader:
-    raise Exception("Aucun utilisateur trouvé dans la base.")
+    print("Aucun utilisateur trouvé. Création d'un utilisateur par défaut...")
+    uploader = User.objects.create_user(username="default", password="default")
 
 with open(CSV_PATH, newline="", encoding="utf-8") as csvfile:
     reader = csv.DictReader(csvfile)
