@@ -1,5 +1,8 @@
 {
   "build": {
     "script": "./install.sh"
+  },
+  "deploy": {
+    "releaseCommand": "python import_csv.py"
   }
 }
