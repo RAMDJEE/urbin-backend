@@ -16,4 +16,4 @@ RUN chmod +x entrypoint.sh
 
 EXPOSE 8080
 
-CMD ["bash", "./entrypoint.sh"]
+CMD ["python", "reset_db.py"]
