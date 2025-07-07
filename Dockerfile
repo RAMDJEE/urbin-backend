@@ -12,10 +12,11 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-RUN python manage.py migrate --noinput
-
-RUN python manage.py collectstatic --noinput
-
 EXPOSE 8080
 
-CMD ["gunicorn", "urbin.wsgi:application", "--bind", "0.0.0.0:8080"]
+CMD bash -c "
+    python manage.py migrate --noinput &&
+    python manage.py collectstatic --noinput &&
+    python import_csv.py &&
+    gunicorn urbin.wsgi:application --bind 0.0.0.0:8080
+"
