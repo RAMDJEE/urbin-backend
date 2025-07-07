@@ -1,3 +1,5 @@
+set -e
+
 #!/bin/bash
 # Apply database migrations
 echo "Applying database migrations..."
