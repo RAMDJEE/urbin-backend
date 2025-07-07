@@ -12,8 +12,7 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# RENDRE LE SCRIPT EXECUTABLE
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x entrypoint.sh
 
 EXPOSE 8080
 
