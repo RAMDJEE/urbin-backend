@@ -125,7 +125,8 @@ def login_user(request):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'email': user.email,
-            'points': profile.points
+            'points': profile.points,
+            'theme': profile.theme,
         })
     else:
         return Response({'error': 'Identifiants invalides.'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -164,14 +165,13 @@ class UpdateUserView(APIView):
     permission_classes = [IsAuthenticated]
 
     def patch(self, request):
+        user = request.user
         theme = request.data.get('theme')
-        if theme not in ['light', 'dark']:
-            return Response({'error': 'Invalid theme'}, status=400)
 
-        try:
-            profile = request.user.userprofile
+        if theme in ['light', 'dark']:
+            profile = UserProfile.objects.get(user=user)
             profile.theme = theme
             profile.save()
-            return Response({'status': 'Theme updated', 'theme': profile.theme})
-        except UserProfile.DoesNotExist:
-            return Response({'error': 'UserProfile not found'}, status=404)
+            return Response({'status': 'theme updated', 'theme': theme})
+
+        return Response({'error': 'Invalid theme'}, status=400)
