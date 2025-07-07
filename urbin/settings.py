@@ -138,3 +138,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+print("DATABASE CONFIGURATION:", file=sys.stderr)
+print(DATABASES, file=sys.stderr)
