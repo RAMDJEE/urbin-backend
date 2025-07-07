@@ -114,7 +114,6 @@ def register_user(request):
 
     return Response({'message': 'Utilisateur créé avec succès.'}, status=status.HTTP_201_CREATED)
 
-from rest_framework_simplejwt.tokens import RefreshToken
 
 @api_view(['POST'])
 def login_user(request):
@@ -124,16 +123,14 @@ def login_user(request):
 
     user = authenticate(username=email, password=password)
     if user is not None:
+        login(request, user)  # <- Ce login crée une session côté Django
         profile = UserProfile.objects.get(user=user)
-
-        refresh = RefreshToken.for_user(user)
         return Response({
             'first_name': user.first_name,
             'last_name': user.last_name,
             'email': user.email,
             'points': profile.points,
-            'theme': profile.theme,
-            'token': str(refresh.access_token)  
+            'theme': profile.theme
         })
     else:
         return Response({'error': 'Identifiants invalides.'}, status=status.HTTP_401_UNAUTHORIZED)
