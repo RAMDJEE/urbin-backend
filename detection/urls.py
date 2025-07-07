@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.shortcuts import render
 from .views import hello_world, register_user, login_user, UpdateUserView
 
 urlpatterns = [
