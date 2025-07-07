@@ -2,6 +2,7 @@ from pathlib import Path
 import dj_database_url
 import os
 import sys
+from corsheaders.defaults import default_headers
 
 print("RAILWAY ENVIRONMENT DUMP:", dict(os.environ), file=sys.stderr)
 
@@ -21,6 +22,7 @@ INSTALLED_APPS = [
     "detection",
     "rest_framework",
     "corsheaders",
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
@@ -116,3 +118,17 @@ SESSION_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_SECURE = True
+
+from datetime import timedelta
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}

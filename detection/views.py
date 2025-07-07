@@ -118,6 +118,7 @@ def register_user(request):
 @api_view(['POST'])
 @csrf_exempt
 def login_user(request):
+    print("✅ login_user a bien été appelé", request.method)
     data = request.data
     email = data.get('email')
     password = data.get('password')
@@ -195,3 +196,31 @@ class UpdateUserView(APIView):
         except Exception as e:
             print("🔥 Erreur update-user:", e)
             return Response({'error': str(e)}, status=500)
+
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_profile(request):
+    user = request.user
+    profile = user.userprofile
+    return Response({
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "points": profile.points,
+        "theme": profile.theme,
+    })
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_user_profile(request):
+    profile = request.user.userprofile
+    theme = request.data.get("theme")
+    if theme in ['dark', 'light']:
+        profile.theme = theme
+        profile.save()
+        return Response({"message": "Theme updated", "theme": theme})
+    return Response({"error": "Invalid theme"}, status=400)
