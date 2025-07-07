@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import hello_world, register_user, login_user
+from .views import hello_world, register_user, login_user, UpdateUserView
 
 urlpatterns = [
     path('upload/', views.upload_image, name='upload_image'),
@@ -12,4 +12,5 @@ urlpatterns = [
     path('api/register/', register_user),
     path('api/login/', login_user),
     path("api/bins/", views.bins_data, name="bins_data"),
+    path('api/update-user/', UpdateUserView.as_view()),
 ]

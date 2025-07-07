@@ -159,3 +159,19 @@ def bins_data(request):
         })
 
     return Response({"stats": stats, "bins": bins_list})
+
+class UpdateUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        theme = request.data.get('theme')
+        if theme not in ['light', 'dark']:
+            return Response({'error': 'Invalid theme'}, status=400)
+
+        try:
+            profile = request.user.userprofile
+            profile.theme = theme
+            profile.save()
+            return Response({'status': 'Theme updated', 'theme': profile.theme})
+        except UserProfile.DoesNotExist:
+            return Response({'error': 'UserProfile not found'}, status=404)
