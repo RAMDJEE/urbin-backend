@@ -1,1 +1,1 @@
-web: gunicorn urbin.wsgi
+web: bash ./entrypoint.sh
