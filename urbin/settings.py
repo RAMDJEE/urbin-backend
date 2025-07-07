@@ -76,9 +76,10 @@ WSGI_APPLICATION = "urbin.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default="sqlite:///db.sqlite3",  # fallback local si DATABASE_URL absent
+    "default": dj_database_url.config(
+        default="sqlite:///db.sqlite3",  # fallback local
         conn_max_age=600,
+        ssl_require=True
     )
 }
 # Password validation
