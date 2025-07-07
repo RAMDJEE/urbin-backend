@@ -3,6 +3,8 @@ import dj_database_url
 import os
 import sys
 
+print("RAILWAY ENVIRONMENT DUMP:", dict(os.environ), file=sys.stderr)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-l%enz!va0!qq)xd@)q1@9xlk!6($gn1rzoq9lhwv2eqxoaj9w7"
