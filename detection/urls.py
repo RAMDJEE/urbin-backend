@@ -1,7 +1,7 @@
 from django.urls import path
 from django.urls import path
 from . import views
-from .views import hello_world, register_user, login_user
+from detection import views
 
 urlpatterns = [
     path('api/login/', views.login_user),
