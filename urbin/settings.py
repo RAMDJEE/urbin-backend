@@ -86,7 +86,10 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = ['https://web-production-1d99.up.railway.app']
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "https://web-production-1d99.up.railway.app"
+]
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if DATABASE_URL:
@@ -108,3 +111,8 @@ else:
 
 print("DATABASE CONFIGURATION:", file=sys.stderr)
 print(DATABASES, file=sys.stderr)
+
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = True
