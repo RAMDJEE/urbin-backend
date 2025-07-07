@@ -167,7 +167,6 @@ def bins_data(request):
     return Response({"stats": stats, "bins": bins_list})
 
 class UpdateUserView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def patch(self, request):
         user = request.user

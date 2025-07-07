@@ -8,7 +8,6 @@ print("RAILWAY ENVIRONMENT DUMP:", dict(os.environ), file=sys.stderr)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-l%enz!va0!qq)xd@)q1@9xlk!6($gn1rzoq9lhwv2eqxoaj9w7"
-
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
@@ -54,23 +53,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "urbin.wsgi.application"
 
-# DATABASE - PostgreSQL only, no fallback
-DATABASE_URL = os.environ.get("DATABASE_URL")
-
-if not DATABASE_URL:
-    raise Exception("DATABASE_URL is not defined. You must set it in Railway.")
-
-DATABASES = {
-    "default": dj_database_url.parse(
-        DATABASE_URL,
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
-
-print("DATABASE CONFIGURATION:", file=sys.stderr)
-print(DATABASES, file=sys.stderr)
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -97,5 +79,25 @@ LOGIN_URL = "login"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = True
-
 CSRF_TRUSTED_ORIGINS = ['https://web-production-1d99.up.railway.app']
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    print("⚠️ DATABASE_URL not found. Using local SQLite for dev.", file=sys.stderr)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+
+print("DATABASE CONFIGURATION:", file=sys.stderr)
+print(DATABASES, file=sys.stderr)
