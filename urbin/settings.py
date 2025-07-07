@@ -78,7 +78,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 LOGIN_URL = "login"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # autorise le frontend local
+    "https://web-production-1d99.up.railway.app",  # autorise Railway aussi
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
 CSRF_TRUSTED_ORIGINS = ['https://web-production-1d99.up.railway.app']
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
