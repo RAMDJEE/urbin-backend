@@ -10,6 +10,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import UserProfile
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 #from detection.gps_utils import extract_gps_from_image
 
 
