@@ -166,16 +166,31 @@ def bins_data(request):
 
     return Response({"stats": stats, "bins": bins_list})
 
-class UpdateUserView(APIView):
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from detection.models import UserProfile
+from django.contrib.auth.models import User
 
+class UpdateUserView(APIView):
     def patch(self, request):
-        user = request.user
         theme = request.data.get('theme')
 
-        if theme in ['light', 'dark']:
-            profile = UserProfile.objects.get(user=user)
+        if not theme:
+            return Response({'error': 'Missing theme'}, status=400)
+
+        # Debug temporaire
+        print("👤 User connecté ?", request.user)
+        print("🎨 Nouveau thème :", theme)
+
+        try:
+            # 🔒 Option 1 : Auth via session/cookie (si login classique)
+            if not request.user or request.user.is_anonymous:
+                return Response({'error': 'Utilisateur non connecté'}, status=401)
+
+            profile = UserProfile.objects.get(user=request.user)
             profile.theme = theme
             profile.save()
             return Response({'status': 'theme updated', 'theme': theme})
-
-        return Response({'error': 'Invalid theme'}, status=400)
+        except Exception as e:
+            print("🔥 Erreur update-user:", e)
+            return Response({'error': str(e)}, status=500)
