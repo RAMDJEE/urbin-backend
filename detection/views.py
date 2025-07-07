@@ -12,7 +12,7 @@ from rest_framework import status
 from .models import UserProfile
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-#from detection.gps_utils import extract_gps_from_image
+from django.views.decorators.csrf import csrf_exempt
 
 
 @login_required
@@ -91,7 +91,7 @@ def hello_world(request):
     return Response({'message': 'Hello from Django REST API!'})
 
 
-
+@csrf_exempt
 @api_view(['POST'])
 def register_user(request):
     data = request.data
@@ -115,6 +115,7 @@ def register_user(request):
     return Response({'message': 'Utilisateur créé avec succès.'}, status=status.HTTP_201_CREATED)
 
 
+@csrf_exempt
 @api_view(['POST'])
 def login_user(request):
     data = request.data
