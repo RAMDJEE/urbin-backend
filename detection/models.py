@@ -46,6 +46,3 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"Profil de {self.user.username}"
-    
-class CustomUser(AbstractUser):
-    theme = models.CharField(max_length=10, default='light')
