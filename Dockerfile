@@ -16,4 +16,4 @@ RUN chmod +x entrypoint.sh
 
 EXPOSE 8080
 
-ENTRYPOINT ["./entrypoint.sh"]
+CMD ["gunicorn", "urbin.wsgi:application", "--bind", "0.0.0.0:8080"]
