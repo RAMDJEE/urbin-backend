@@ -91,8 +91,8 @@ def hello_world(request):
     return Response({'message': 'Hello from Django REST API!'})
 
 
-@csrf_exempt
 @api_view(['POST'])
+@csrf_exempt
 def register_user(request):
     data = request.data
     email = data.get('email')
@@ -115,8 +115,8 @@ def register_user(request):
     return Response({'message': 'Utilisateur créé avec succès.'}, status=status.HTTP_201_CREATED)
 
 
-@csrf_exempt
 @api_view(['POST'])
+@csrf_exempt
 def login_user(request):
     data = request.data
     email = data.get('email')
