@@ -20,6 +20,7 @@ from detection.models import UserProfile
 from django.contrib.auth.models import User
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import parser_classes
+from django.http import JsonResponse
 
 
 @login_required
