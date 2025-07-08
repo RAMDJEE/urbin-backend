@@ -219,6 +219,7 @@ def update_user_profile(request):
     profile = request.user.userprofile
     theme = request.data.get("theme")
     langue = request.data.get("langue")  
+    points = request.data.get("points")  
 
     updated = {}
 
@@ -229,6 +230,13 @@ def update_user_profile(request):
     if langue in ['fr', 'en']:
         profile.langue = langue
         updated['langue'] = langue
+
+    if points is not None:
+        try:
+            profile.points += int(points)  
+            updated['points'] = profile.points
+        except Exception as e:
+            return Response({"error": "points doit être un nombre"}, status=400)
 
     if updated:
         profile.save()

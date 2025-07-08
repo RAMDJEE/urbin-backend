@@ -8,7 +8,7 @@ def load_rules(json_path="rules.json"):
         with open(json_path, "r") as f:
             rules = json.load(f)
     except Exception as e:
-        print("⚠️ Impossible de charger les règles, utilisation des valeurs par défaut.")
+        print("Impossible de charger les règles, utilisation des valeurs par défaut.")
         print("Erreur :", e)
         rules = {
             "mean_color_threshold": 100,
@@ -207,15 +207,15 @@ def classify_image(features, rules):
 
 def demo_extraction(image_path, rules_path="rules.json"):
     if not os.path.exists(image_path):
-        print(f"❌ Fichier introuvable : {image_path}")
+        print(f"Fichier introuvable : {image_path}")
         return
 
     try:
-        print(f"🔍 Analyse de l'image : {image_path}")
+        print(f"Analyse de l'image : {image_path}")
         print("=" * 50)
         
         features = extract_features(image_path)
-        print("📊 Caractéristiques extraites :")
+        print("Caractéristiques extraites :")
         for key, value in features.items():
             if isinstance(value, float):
                 print(f"   {key}: {value:.3f}")
@@ -227,7 +227,7 @@ def demo_extraction(image_path, rules_path="rules.json"):
         rules = load_rules(rules_path)
         result = classify_image(features, rules)
         
-        print("🧪 Résultats de la classification :")
+        print("Résultats de la classification :")
         print(f"   Classification finale: {result['classification']}")
         print(f"   Confiance: {result['confidence']}")
         print(f"   Score de remplissage: {result['fullness_score']:.2f}")
@@ -235,7 +235,7 @@ def demo_extraction(image_path, rules_path="rules.json"):
         print(f"   Validation par critères multiples: {result['validation_details']}")
 
     except Exception as e:
-        print("❌ Erreur lors du traitement de l'image :", e)
+        print("Erreur lors du traitement de l'image :", e)
 
 def create_default_rules_file(rules_path="rules.json"):
     """Crée un fichier de règles avec des valeurs optimisées"""
@@ -263,7 +263,7 @@ def create_default_rules_file(rules_path="rules.json"):
     with open(rules_path, "w") as f:
         json.dump(default_rules, f, indent=4, ensure_ascii=False)
     
-    print(f"✅ Fichier de règles créé : {rules_path}")
+    print(f"Fichier de règles créé : {rules_path}")
 
 def extract_ground_patch(img):
     """Extrait une bande devant la base de la poubelle pour éviter les fausses détections"""
