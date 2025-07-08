@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class ImageUpload(models.Model):
     uploader = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="uploads/")
+    image_url = models.URLField(max_length=500)
     upload_date = models.DateTimeField(auto_now_add=True)
 
     latitude = models.FloatField(null=True, blank=True)

@@ -235,25 +235,23 @@ def update_user_profile(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@parser_classes([MultiPartParser, FormParser])
 def upload_image_api(request):
-    file = request.FILES.get('image')
+    image_url = request.data.get('image_url')
     annotation = request.data.get('annotation', 'non')
     latitude = request.data.get('latitude')
     longitude = request.data.get('longitude')
-
     taille = request.data.get('taille')
     largeur = request.data.get('largeur')
     hauteur = request.data.get('hauteur')
     pixels = request.data.get('pixels')
     type_ = request.data.get('type')
 
-    if not file:
-        return Response({'error': 'Aucune image reçue.'}, status=400)
+    if not image_url:
+        return Response({'error': 'Aucune URL d’image reçue.'}, status=400)
 
     instance = ImageUpload.objects.create(
         uploader=request.user,
-        image=file,
+        image_url=image_url,
         annotation=annotation,
         latitude=latitude,
         longitude=longitude,
