@@ -236,35 +236,12 @@ def update_user_profile(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_image_api(request):
-    image_url = request.data.get('image_url')
-    annotation = request.data.get('annotation', 'non')
-    latitude = request.data.get('latitude')
-    longitude = request.data.get('longitude')
-    taille = request.data.get('taille')
-    largeur = request.data.get('largeur')
-    hauteur = request.data.get('hauteur')
-    pixels = request.data.get('pixels')
-    type_ = request.data.get('type')
-
-    if not image_url:
-        return Response({'error': 'Aucune URL d’image reçue.'}, status=400)
-
-    instance = ImageUpload.objects.create(
-        uploader=request.user,
-        image_url=image_url,
-        annotation=annotation,
-        latitude=latitude,
-        longitude=longitude,
-        taille=taille,
-        largeur=largeur,
-        hauteur=hauteur,
-        pixels=pixels,
-        type=type_,
-    )
-
-    if annotation == 'pleine':
-        profile = request.user.userprofile
-        profile.points += 1
-        profile.save()
-
-    return Response({'message': 'Image enregistrée', 'id': instance.id}, status=201)
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            image_upload = form.save(commit=False)
+            image_upload.uploader = request.user
+            image_upload.save()
+            return JsonResponse({'status': 'success'})
+        return JsonResponse({'status': 'invalid form'}, status=400)
+    return JsonResponse({'error': 'POST required'}, status=405)
