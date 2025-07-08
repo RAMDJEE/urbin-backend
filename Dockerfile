@@ -12,8 +12,10 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose the port
+RUN chmod +x entrypoint.sh
+
 EXPOSE 8080
 
-# CMD unique avec migration + gunicorn
-CMD ["sh", "-c", "python manage.py makemigrations detection && python manage.py migrate && gunicorn urbin.wsgi:application --bind 0.0.0.0:8080"]
+
+
+CMD ["gunicorn", "urbin.wsgi:application", "--bind", "0.0.0.0:8080"]
