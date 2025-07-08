@@ -84,6 +84,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # autorise le frontend local
     "https://web-production-1d99.up.railway.app",  # autorise Railway aussi
+    "https://urbin.ct.ws",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -114,11 +115,6 @@ else:
 print("DATABASE CONFIGURATION:", file=sys.stderr)
 print(DATABASES, file=sys.stderr)
 
-SESSION_COOKIE_SAMESITE = "None"
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SECURE = True
-
 from datetime import timedelta
 
 REST_FRAMEWORK = {
@@ -132,3 +128,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "Authorization",
+]
