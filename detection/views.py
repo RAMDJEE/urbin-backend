@@ -13,6 +13,11 @@ from .models import UserProfile
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
+from rest_framework.views import APIView
+from detection.models import UserProfile
+from django.contrib.auth.models import User
 
 
 @login_required
@@ -118,7 +123,7 @@ def register_user(request):
 @api_view(['POST'])
 @csrf_exempt
 def login_user(request):
-    print("✅ login_user a bien été appelé", request.method)
+    print("login_user a bien été appelé", request.method)
     data = request.data
     email = data.get('email')
     password = data.get('password')
@@ -132,7 +137,8 @@ def login_user(request):
             'last_name': user.last_name,
             'email': user.email,
             'points': profile.points,
-            'theme': profile.theme
+            'theme': profile.theme,
+            "langue": profile.langue,
         })
     else:
         return Response({'error': 'Identifiants invalides.'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -168,11 +174,6 @@ def bins_data(request):
 
     return Response({"stats": stats, "bins": bins_list})
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from detection.models import UserProfile
-from django.contrib.auth.models import User
-
 class UpdateUserView(APIView):
     def patch(self, request):
         theme = request.data.get('theme')
@@ -180,12 +181,7 @@ class UpdateUserView(APIView):
         if not theme:
             return Response({'error': 'Missing theme'}, status=400)
 
-        # Debug temporaire
-        print("👤 User connecté ?", request.user)
-        print("🎨 Nouveau thème :", theme)
-
         try:
-            # 🔒 Option 1 : Auth via session/cookie (si login classique)
             if not request.user or request.user.is_anonymous:
                 return Response({'error': 'Utilisateur non connecté'}, status=401)
 
@@ -194,12 +190,8 @@ class UpdateUserView(APIView):
             profile.save()
             return Response({'status': 'theme updated', 'theme': theme})
         except Exception as e:
-            print("🔥 Erreur update-user:", e)
+            print("Erreur update-user:", e)
             return Response({'error': str(e)}, status=500)
-
-
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -219,8 +211,20 @@ def get_user_profile(request):
 def update_user_profile(request):
     profile = request.user.userprofile
     theme = request.data.get("theme")
+    langue = request.data.get("langue")  
+
+    updated = {}
+
     if theme in ['dark', 'light']:
         profile.theme = theme
+        updated['theme'] = theme
+
+    if langue in ['fr', 'en']:
+        profile.langue = langue
+        updated['langue'] = langue
+
+    if updated:
         profile.save()
-        return Response({"message": "Theme updated", "theme": theme})
-    return Response({"error": "Invalid theme"}, status=400)
+        return Response({"message": "Updated", **updated})
+
+    return Response({"error": "No valid fields to update"}, status=400)
