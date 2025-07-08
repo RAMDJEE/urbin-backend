@@ -1,0 +1,8 @@
+{
+  "mounts": [
+    {
+      "source": "media",
+      "target": "/app/media"
+    }
+  ]
+}

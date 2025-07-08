@@ -132,3 +132,6 @@ SIMPLE_JWT = {
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "Authorization",
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
