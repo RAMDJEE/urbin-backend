@@ -241,38 +241,34 @@ def update_user_profile(request):
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def upload_image_api(request):
-    # Récupère le fichier et les champs envoyés
-    image_file   = request.FILES.get('image')
-    annotation   = request.POST.get('annotation')
-    latitude     = request.POST.get('latitude')
-    longitude    = request.POST.get('longitude')
-    taille       = request.POST.get('taille')
-    largeur      = request.POST.get('largeur')
-    hauteur      = request.POST.get('hauteur')
-    pixels       = request.POST.get('pixels')
-    type_field   = request.POST.get('type')
+    # On suppose que tu envoies bien tous les champs dans le FormData JS
+    try:
+        image_file = request.FILES.get('image')
 
-    if not image_file:
-        return Response({'error': 'Image manquante.'}, status=400)
+        if not image_file:
+            return Response({'error': 'Image manquante.'}, status=400)
 
-    # Crée l'instance en remplissant tous les champs
-    img = ImageUpload(
-        uploader    = request.user,
-        image       = image_file,
-        annotation  = annotation or 'non',
-        latitude    = float(latitude)   if latitude else None,
-        longitude   = float(longitude)  if longitude else None,
-        taille      = taille,
-        largeur     = largeur,
-        hauteur     = hauteur,
-        pixels      = pixels,
-        type        = type_field,
-        chemin      = image_file.name,
-        date_csv    = timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
-    )
-    img.save()
+        # Tu crées l'objet manuellement :
+        obj = ImageUpload()
+        obj.uploader = request.user
+        obj.image = image_file
+        obj.annotation = request.POST.get('annotation')
+        obj.latitude = request.POST.get('latitude')
+        obj.longitude = request.POST.get('longitude')
+        obj.taille = request.POST.get('taille')
+        obj.largeur = request.POST.get('largeur')
+        obj.hauteur = request.POST.get('hauteur')
+        obj.pixels = request.POST.get('pixels')
+        obj.type = request.POST.get('type')
+        # Tu ajoutes ici tous les champs utiles
 
-    return Response({'status': 'success'})
+        obj.save()
+
+        return Response({'status': 'success'}, status=201)
+
+    except Exception as e:
+        print("Erreur upload_image_api:", e)
+        return Response({'error': str(e)}, status=500)
 
 
 @api_view(['POST'])
