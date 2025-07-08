@@ -22,4 +22,5 @@ urlpatterns = [
     path('api/user/update/', views.update_user_profile),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/upload-image/', views.upload_image_api, name='upload_image_api'),
 ]

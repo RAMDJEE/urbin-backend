@@ -18,6 +18,8 @@ from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from detection.models import UserProfile
 from django.contrib.auth.models import User
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import parser_classes
 
 
 @login_required
@@ -229,3 +231,42 @@ def update_user_profile(request):
         return Response({"message": "Updated", **updated})
 
     return Response({"error": "No valid fields to update"}, status=400)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def upload_image_api(request):
+    file = request.FILES.get('image')
+    annotation = request.data.get('annotation', 'non')
+    latitude = request.data.get('latitude')
+    longitude = request.data.get('longitude')
+
+    taille = request.data.get('taille')
+    largeur = request.data.get('largeur')
+    hauteur = request.data.get('hauteur')
+    pixels = request.data.get('pixels')
+    type_ = request.data.get('type')
+
+    if not file:
+        return Response({'error': 'Aucune image reçue.'}, status=400)
+
+    instance = ImageUpload.objects.create(
+        uploader=request.user,
+        image=file,
+        annotation=annotation,
+        latitude=latitude,
+        longitude=longitude,
+        taille=taille,
+        largeur=largeur,
+        hauteur=hauteur,
+        pixels=pixels,
+        type=type_,
+    )
+
+    if annotation == 'pleine':
+        profile = request.user.userprofile
+        profile.points += 1
+        profile.save()
+
+    return Response({'message': 'Image enregistrée', 'id': instance.id}, status=201)
