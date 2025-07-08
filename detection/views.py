@@ -21,7 +21,7 @@ from rest_framework.decorators import parser_classes
 from django.http import JsonResponse
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import ImageUpload
-from .image_processing import extract_features, classify_image, load_rules
+from .ai.demo_extraction import extract_features, classify_image, load_rules
 from django.conf import settings
 import uuid
 
