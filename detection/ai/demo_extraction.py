@@ -273,15 +273,3 @@ def extract_ground_patch(img):
     left = int(w * 0.25)
     right = int(w * 0.75)
     return img[top:bottom, left:right]
-
-
-
-# Exemple d'utilisation
-if __name__ == "__main__":
-    # Créer le fichier de règles s'il n'é pas
-    rules_path = "rules.json"
-    if not os.path.exists(rules_path):
-        create_default_rules_file(rules_path)
-    
-    image_path = "Data/train/with_label/dirty/00511_01.jpg"
-    demo_extraction(image_path, rules_path)

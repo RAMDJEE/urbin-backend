@@ -239,16 +239,40 @@ def update_user_profile(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def upload_image_api(request):
-    if request.method == 'POST':
-        form = ImageUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            image_upload = form.save(commit=False)
-            image_upload.uploader = request.user
-            image_upload.save()
-            return JsonResponse({'status': 'success'})
-        return JsonResponse({'status': 'invalid form'}, status=400)
-    return JsonResponse({'error': 'POST required'}, status=405)
+    # Récupère le fichier et les champs envoyés
+    image_file   = request.FILES.get('image')
+    annotation   = request.POST.get('annotation')
+    latitude     = request.POST.get('latitude')
+    longitude    = request.POST.get('longitude')
+    taille       = request.POST.get('taille')
+    largeur      = request.POST.get('largeur')
+    hauteur      = request.POST.get('hauteur')
+    pixels       = request.POST.get('pixels')
+    type_field   = request.POST.get('type')
+
+    if not image_file:
+        return Response({'error': 'Image manquante.'}, status=400)
+
+    # Crée l'instance en remplissant tous les champs
+    img = ImageUpload(
+        uploader    = request.user,
+        image       = image_file,
+        annotation  = annotation or 'non',
+        latitude    = float(latitude)   if latitude else None,
+        longitude   = float(longitude)  if longitude else None,
+        taille      = taille,
+        largeur     = largeur,
+        hauteur     = hauteur,
+        pixels      = pixels,
+        type        = type_field,
+        chemin      = image_file.name,
+        date_csv    = timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+    img.save()
+
+    return Response({'status': 'success'})
 
 
 @api_view(['POST'])
