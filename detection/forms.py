@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 class ImageUploadForm(forms.ModelForm):
     class Meta:
         model = ImageUpload
-        fields = ['image', 'latitude', 'longitude']
+        fields = ['image_url', 'latitude', 'longitude']
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)

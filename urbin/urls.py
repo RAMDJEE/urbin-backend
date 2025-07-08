@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+import detection.urls
 
 urlpatterns = [
     path('', include('detection.urls')),  # Le routage principal vers ton app
