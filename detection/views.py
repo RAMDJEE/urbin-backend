@@ -204,6 +204,7 @@ def get_user_profile(request):
         "email": user.email,
         "points": profile.points,
         "theme": profile.theme,
+        "langue": profile.langue,
     })
 
 @api_view(['PATCH'])
