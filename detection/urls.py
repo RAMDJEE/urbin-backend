@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import (
 )
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import analyze_image_api
 
 urlpatterns = [
     path('upload/', views.upload_image, name='upload_image'),
@@ -25,6 +26,7 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/upload-image/', views.upload_image_api, name='upload_image_api'),
+    path('api/analyze-image/', analyze_image_api, name='analyze_image_api'),
 ]
 
 if settings.DEBUG:

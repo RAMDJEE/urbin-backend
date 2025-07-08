@@ -13,14 +13,17 @@ from .models import UserProfile
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
-from rest_framework.views import APIView
 from detection.models import UserProfile
 from django.contrib.auth.models import User
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import parser_classes
 from django.http import JsonResponse
+from rest_framework.parsers import MultiPartParser, FormParser
+from .models import ImageUpload
+from .image_processing import extract_features, classify_image, load_rules
+from django.conf import settings
+import uuid
 
 
 @login_required
@@ -246,3 +249,41 @@ def upload_image_api(request):
             return JsonResponse({'status': 'success'})
         return JsonResponse({'status': 'invalid form'}, status=400)
     return JsonResponse({'error': 'POST required'}, status=405)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def analyze_image_api(request):
+    image_file = request.FILES.get('image')
+
+    if not image_file:
+        return Response({'error': 'Image manquante.'}, status=400)
+
+    # Sauvegarder temporairement l’image
+    temp_filename = f"{uuid.uuid4()}.jpg"
+    temp_path = os.path.join(settings.MEDIA_ROOT, 'temp', temp_filename)
+    os.makedirs(os.path.dirname(temp_path), exist_ok=True)
+    with open(temp_path, 'wb+') as destination:
+        for chunk in image_file.chunks():
+            destination.write(chunk)
+
+    try:
+        # Analyse de l’image
+        features = extract_features(temp_path)
+        rules = load_rules()
+        classification_result = classify_image(features, rules)
+
+        # Supprimer le fichier temporaire
+        os.remove(temp_path)
+
+        # Retourner le résultat
+        return Response({
+            "status": "pleine" if classification_result['classification'] == "Poubelle pleine" else "vide",
+            "score": classification_result['fullness_score'],
+            "details": classification_result['validation_details']
+        })
+
+    except Exception as e:
+        print("Erreur classification:", e)
+        return Response({'error': str(e)}, status=500)
